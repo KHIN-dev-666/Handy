@@ -35,7 +35,7 @@ fn client() -> &'static reqwest::blocking::Client {
 
 /// Whether cloud transcription is switched on and has a key to use.
 pub fn is_active(settings: &AppSettings) -> bool {
-    settings.cloud_stt_enabled && api_key(settings).is_some()
+    settings.cloud_stt_enabled && !settings.translate_to_english && api_key(settings).is_some()
 }
 
 fn api_key(settings: &AppSettings) -> Option<String> {

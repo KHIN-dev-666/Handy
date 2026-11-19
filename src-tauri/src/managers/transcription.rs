@@ -819,6 +819,10 @@ impl TranscriptionManager {
     /// falls back to batch transcription. Frames sent before the decode begins
     /// queue on the channel and are not lost.
     pub fn start_stream(&self) {
+        // The recorder still retains the full clip for cloud or local batch decoding.
+        if crate::cloud_stt::is_active(&get_settings(&self.app_handle)) {
+            return;
+        }
         if self.router.is_open() || self.active_stream_worker.load(Ordering::Acquire) != 0 {
             warn!("start_stream called while a stream worker is already active");
             return;
@@ -986,13 +990,6 @@ impl TranscriptionManager {
     pub fn transcribe_recording(&self, samples: Vec<f32>) -> Result<Transcription> {
         let started = Instant::now();
         let live = self.finalize_live(samples.len())?;
-        // Fork: cloud STT replaces the live decode's result, so the whole
-        // recording goes to the cloud (the live router is still finalized).
-        let live = if crate::cloud_stt::is_active(&get_settings(&self.app_handle)) {
-            None
-        } else {
-            live
-        };
         self.complete(started, samples, live)
     }
 
