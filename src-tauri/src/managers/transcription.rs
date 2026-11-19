@@ -986,6 +986,13 @@ impl TranscriptionManager {
     pub fn transcribe_recording(&self, samples: Vec<f32>) -> Result<Transcription> {
         let started = Instant::now();
         let live = self.finalize_live(samples.len())?;
+        // Fork: cloud STT replaces the live decode's result, so the whole
+        // recording goes to the cloud (the live router is still finalized).
+        let live = if crate::cloud_stt::is_active(&get_settings(&self.app_handle)) {
+            None
+        } else {
+            live
+        };
         self.complete(started, samples, live)
     }
 
@@ -1066,6 +1073,18 @@ impl TranscriptionManager {
         let mark = self.engine.cancel_mark();
         self.touch_activity();
         let batch = self.batch_context(&audio)?;
+        if crate::cloud_stt::is_active(&batch.settings) {
+            let language = batch.setup.language.language.clone();
+            if let Ok(text) =
+                crate::cloud_stt::transcribe(&batch.settings, &audio, language.as_deref())
+            {
+                return Ok(RunOutcome {
+                    setup: batch.setup,
+                    text,
+                    model_detected_language: None,
+                });
+            }
+        }
         self.transcribe_cpp(mark, batch, audio)
     }
 

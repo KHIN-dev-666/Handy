@@ -471,6 +471,18 @@ pub struct AppSettings {
     pub model_unload_timeout: ModelUnloadTimeout,
     #[serde(default = "default_word_correction_threshold")]
     pub word_correction_threshold: f64,
+    /// Fork: send finished recordings to an OpenAI-compatible cloud
+    /// transcription endpoint (Groq by default), falling back to the local
+    /// model on any error.
+    #[serde(default)]
+    pub cloud_stt_enabled: bool,
+    #[serde(default = "default_cloud_stt_model")]
+    pub cloud_stt_model: String,
+    #[serde(default = "default_cloud_stt_base_url")]
+    pub cloud_stt_base_url: String,
+    /// Which `post_process_api_keys` entry holds the cloud API key.
+    #[serde(default = "default_cloud_stt_key_provider")]
+    pub cloud_stt_key_provider: String,
     #[serde(default = "default_history_limit")]
     pub history_limit: usize,
     #[serde(default = "default_recording_retention_period")]
@@ -670,6 +682,18 @@ fn default_log_level() -> LogLevel {
 
 fn default_word_correction_threshold() -> f64 {
     0.18
+}
+
+fn default_cloud_stt_model() -> String {
+    "whisper-large-v3".to_string()
+}
+
+fn default_cloud_stt_base_url() -> String {
+    "https://api.groq.com/openai/v1".to_string()
+}
+
+fn default_cloud_stt_key_provider() -> String {
+    "groq".to_string()
 }
 
 fn default_paste_delay_ms() -> u64 {
@@ -1037,6 +1061,10 @@ pub fn get_default_settings() -> AppSettings {
         custom_words: Vec::new(),
         model_unload_timeout: ModelUnloadTimeout::default(),
         word_correction_threshold: default_word_correction_threshold(),
+        cloud_stt_enabled: false,
+        cloud_stt_model: default_cloud_stt_model(),
+        cloud_stt_base_url: default_cloud_stt_base_url(),
+        cloud_stt_key_provider: default_cloud_stt_key_provider(),
         history_limit: default_history_limit(),
         recording_retention_period: default_recording_retention_period(),
         paste_method: PasteMethod::default(),
