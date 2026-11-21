@@ -334,6 +334,17 @@ fn initialize_core_logic(app_handle: &AppHandle) {
                 // Use centralized cancellation that handles all operations
                 cancel_current_operation(app);
             }
+            "toggle_mute_while_recording" => {
+                let enabled = !settings::get_settings(app).mute_while_recording;
+                if let Err(e) =
+                    shortcut::change_mute_while_recording_setting(app.clone(), enabled)
+                {
+                    log::error!("Failed to toggle mute while recording via tray: {}", e);
+                    return;
+                }
+                log::info!("Mute while recording set to {} via tray.", enabled);
+                tray::rebuild_tray_menu(app);
+            }
             "quit" => {
                 app.exit(0);
             }

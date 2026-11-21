@@ -70,6 +70,8 @@ struct MenuInputs {
     downloaded_models: Vec<(String, String)>,
     locale: String,
     update_checks_enabled: bool,
+    /// Whether "mute while recording" is on (checked tray item).
+    mute_while_recording: bool,
     /// The language submenu, when the selected model has languages to pick.
     language: Option<LanguageMenu>,
 }
@@ -393,6 +395,7 @@ fn compute_desired(app: &AppHandle, icon_state: TrayIconState) -> TrayDesired {
             downloaded_models,
             locale: settings.app_language,
             update_checks_enabled: settings.update_checks_enabled,
+            mute_while_recording: settings.mute_while_recording,
             language,
         },
     }
@@ -689,6 +692,19 @@ fn build_menu(app: &AppHandle, inputs: &MenuInputs) -> tauri::Result<(Menu<tauri
         true,
         None::<&str>,
     )?;
+    let mute_label = if strings.mute_while_recording.is_empty() {
+        get_tray_translations(Some("en".to_string())).mute_while_recording
+    } else {
+        strings.mute_while_recording.clone()
+    };
+    let mute_i = CheckMenuItem::with_id(
+        app,
+        "toggle_mute_while_recording",
+        &mute_label,
+        true,
+        inputs.mute_while_recording,
+        None::<&str>,
+    )?;
     let quit_i = MenuItem::with_id(app, "quit", &strings.quit, true, quit_accelerator)?;
     let separator = || PredefinedMenuItem::separator(app);
 
@@ -703,6 +719,7 @@ fn build_menu(app: &AppHandle, inputs: &MenuInputs) -> tauri::Result<(Menu<tauri
                 &separator()?,
                 &copy_last_transcript_i,
                 &separator()?,
+                &mute_i,
                 &settings_i,
                 &check_updates_i,
                 &separator()?,
@@ -745,6 +762,7 @@ fn build_menu(app: &AppHandle, inputs: &MenuInputs) -> tauri::Result<(Menu<tauri
                 &model_submenu,
                 &unload_model_i,
                 &separator()?,
+                &mute_i,
                 &settings_i,
                 &check_updates_i,
                 &separator()?,
@@ -988,6 +1006,7 @@ mod tests {
             downloaded_models: vec![("small".to_string(), "Small".to_string())],
             locale: "en".to_string(),
             update_checks_enabled: true,
+            mute_while_recording: false,
             language: None,
         }
     }

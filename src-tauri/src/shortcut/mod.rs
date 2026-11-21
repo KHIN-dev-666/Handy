@@ -1386,6 +1386,12 @@ pub fn change_mute_while_recording_setting(app: AppHandle, enabled: bool) -> Res
     let mut settings = settings::get_settings(&app);
     settings.mute_while_recording = enabled;
     settings::write_settings(&app, settings);
+    // Keep the tray checkbox in sync with the settings window toggle.
+    crate::tray::update_tray_menu(&app);
+    let _ = app.emit(
+        "settings-changed",
+        serde_json::json!({ "setting": "mute_while_recording", "value": enabled }),
+    );
     Ok(())
 }
 
