@@ -3,6 +3,7 @@
     "settings": "Cài đặt...",
     "checkUpdates": "Kiểm tra cập nhật...",
     "copyLastTranscript": "Sao chép bản chép lời mới nhất",
+    "muteWhileRecording": "Tắt tiếng khi ghi âm",
     "unloadModel": "Dỡ mô hình",
     "model": "Mô hình",
     "quit": "Thoát",

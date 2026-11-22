@@ -336,8 +336,7 @@ fn initialize_core_logic(app_handle: &AppHandle) {
             }
             "toggle_mute_while_recording" => {
                 let enabled = !settings::get_settings(app).mute_while_recording;
-                if let Err(e) =
-                    shortcut::change_mute_while_recording_setting(app.clone(), enabled)
+                if let Err(e) = shortcut::change_mute_while_recording_setting(app.clone(), enabled)
                 {
                     log::error!("Failed to toggle mute while recording via tray: {}", e);
                     return;

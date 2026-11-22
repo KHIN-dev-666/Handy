@@ -3,6 +3,7 @@
     "settings": "Inställningar...",
     "checkUpdates": "Sök efter uppdateringar...",
     "copyLastTranscript": "Kopiera senaste transkriptionen",
+    "muteWhileRecording": "Ljudlös under inspelning",
     "unloadModel": "Avlasta modell",
     "model": "Modell",
     "quit": "Avsluta",

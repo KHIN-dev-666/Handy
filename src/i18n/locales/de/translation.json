@@ -3,6 +3,7 @@
     "settings": "Einstellungen...",
     "checkUpdates": "Nach Updates suchen...",
     "copyLastTranscript": "Letzte Transkription kopieren",
+    "muteWhileRecording": "Während Aufnahme stummschalten",
     "unloadModel": "Modell entladen",
     "model": "Modell",
     "quit": "Beenden",

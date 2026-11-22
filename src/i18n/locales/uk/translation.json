@@ -3,6 +3,7 @@
     "settings": "Налаштування...",
     "checkUpdates": "Перевірити оновлення...",
     "copyLastTranscript": "Скопіювати останню транскрипцію",
+    "muteWhileRecording": "Вимкнути звук під час запису",
     "unloadModel": "Вивантажити модель",
     "model": "Модель",
     "quit": "Вийти",

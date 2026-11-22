@@ -3,6 +3,7 @@
     "settings": "Ustawienia...",
     "checkUpdates": "Sprawdź aktualizacje...",
     "copyLastTranscript": "Kopiuj ostatnią transkrypcję",
+    "muteWhileRecording": "Wycisz podczas nagrywania",
     "unloadModel": "Zwolnij model",
     "model": "Model",
     "quit": "Zamknij",

@@ -3,6 +3,7 @@
     "settings": "Configuració...",
     "checkUpdates": "Comprova si hi ha actualitzacions...",
     "copyLastTranscript": "Copia l'última transcripció",
+    "muteWhileRecording": "Silencia durant l'enregistrament",
     "unloadModel": "Allibera el model de la memòria",
     "model": "Model",
     "quit": "Surt",
