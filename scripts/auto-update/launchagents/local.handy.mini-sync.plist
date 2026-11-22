@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>local.handy.mini-sync</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/bin/bash</string>
+		<string>/Users/wombatsama/Handy-fork/scripts/auto-update/sync-mini.sh</string>
+	</array>
+	<key>WatchPaths</key>
+	<array>
+		<string>/Applications/Handy.app/Contents/Info.plist</string>
+	</array>
+	<key>StartInterval</key>
+	<integer>3600</integer>
+	<key>ThrottleInterval</key>
+	<integer>120</integer>
+	<key>ProcessType</key>
+	<string>Background</string>
+	<key>StandardOutPath</key>
+	<string>/Users/wombatsama/Library/Logs/handy-auto-update/mini-sync.log</string>
+	<key>StandardErrorPath</key>
+	<string>/Users/wombatsama/Library/Logs/handy-auto-update/mini-sync.log</string>
+</dict>
+</plist>
