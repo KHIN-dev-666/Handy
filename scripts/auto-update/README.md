@@ -37,3 +37,7 @@ launchctl bootout gui/$(id -u)/local.handy.mini-sync
 ```
 
 Re-enable with `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/<label>.plist`. The plists are copies of `launchagents/`.
+
+## Switching to the certificate (one time)
+
+Until `~/Library/Application Support/handy-auto-update/signing-switched` exists, or the installed app is already signed with "Handy Local Signing", the weekly job stops after the build and doesn't install anything. To switch, re-sign the installed app, run `tccutil reset Accessibility com.pais.handy`, relaunch Handy, switch Accessibility on (password), and then create that file.

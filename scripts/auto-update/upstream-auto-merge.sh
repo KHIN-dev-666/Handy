@@ -150,6 +150,18 @@ sign_app "$BUILT" || fail "簽章" "用「Handy Local Signing」簽章失敗（�
 NEW_VERSION=$(app_version "$BUILT")
 log "Built $NEW_VERSION cdhash=$(app_cdhash "$BUILT")"
 
+# The first install of a certificate-signed build changes the signing identity, so the
+# owner has to switch Accessibility on once (password). Until they've done that switch
+# deliberately (touch "$STATE_DIR/signing-switched"), behave like a dry run.
+if [ "$DRY_RUN" = 0 ] && [ ! -f "$STATE_DIR/signing-switched" ] &&
+    ! /usr/bin/codesign -dvv "$APP_PATH" 2>&1 | grep -q "^Authority=$SIGN_NAME\$"; then
+    log "Installed app is not signed with $SIGN_NAME and the switch isn't done yet; not installing"
+    restore
+    notify "$TITLE" "官方 $LABEL 已合併、測試、編譯都通過，但還沒切換到本機憑證簽章，所以沒安裝（下週再試）"
+    log "===== end (waiting for signing switch) ====="
+    exit 0
+fi
+
 if [ "$DRY_RUN" = 1 ]; then
     log "Dry run: merge, checks and build passed; not installing or pushing"
     restore
