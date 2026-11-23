@@ -133,6 +133,21 @@ log "Merged: $(git rev-parse HEAD)"
 
 # 5. Checks (same as the repo's CI: code-quality.yml + test.yml).
 export CMAKE_POLICY_VERSION_MINIMUM=3.5
+
+# A Command Line Tools update moves clang's resource dir, but cargo keeps the
+# cached build.rs output (link-search for libclang_rt.osx.a) pointing at the old
+# one. If any cached link-search path of the handy crate is gone, rebuild it.
+for profile in debug release; do
+    for out in "$REPO_DIR"/src-tauri/target/$profile/build/handy/*/run/stdout "$REPO_DIR"/src-tauri/target/$profile/build/handy-[0-9a-f]*/output; do
+        [ -f "$out" ] || continue
+        if sed -n 's/^cargo:rustc-link-search=native=//p' "$out" | while read -r d; do [ -d "$d" ] || exit 1; done; then :; else
+            log "Stale toolchain path in $out; cleaning handy ($profile)"
+            flag=""; [ "$profile" = release ] && flag="--release"
+            (cd src-tauri && cargo clean -p handy $flag) >>"$LOG_FILE" 2>&1
+            break
+        fi
+    done
+done
 run_logged "bun install" bun install --frozen-lockfile || fail "安裝套件" "bun install 失敗"
 if [ "$SKIP_TESTS" = 0 ]; then
     for check in check:translations check:model-languages check:catalog test:keyboard lint format:check; do
